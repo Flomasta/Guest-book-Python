@@ -6,7 +6,6 @@ from gbook import Gbook
 from os import environ
 from cgi import FieldStorage
 
-
 # отладчик
 cgitb.enable()
 
@@ -20,19 +19,19 @@ print('Content-Type: text/html; charset =  utf-8\n')
 
 gbook = Gbook()
 
-
 parameters = FieldStorage()
 
 if environ.get('REQUEST_METHOD') == 'POST':
-    if parameters.getvalue('operation') == 'message':
+    operation = parameters.getvalue('operation')
+    if operation == 'message':
         name = html.escape(parameters.getvalue('name'))
         email = html.escape(parameters.getvalue('email'))
         msg = html.escape(parameters.getvalue('msg'))
         gbook.save_message(name, email, msg)
-    elif parameters.getvalue('operation') == 'login':
+    elif operation == 'login':
         login = html.escape(parameters.getvalue('login'))
         password = html.escape(parameters.getvalue('password'))
-    elif parameters.getvalue('operation') == 'logout':
+    elif operation == 'logout':
         pass
 gbook.read_message()
 print(gbook.content.format(login_form=gbook.login_form, form=gbook.form, messages=gbook.message))
