@@ -1,0 +1,14 @@
+<form action="/gbook/index.py" method="post" class="msform">
+
+   <!-- fieldsets -->
+   <fieldset>
+    <h2 class="fs-title">Guest Book</h2>
+    <input type="text" name="name" placeholder="Place Your Name" />
+    <input type="text" name="email" placeholder="E-mail" />
+    <textarea name="msg" placeholder="Your message here" rows ="10"></textarea>
+    <input type="hidden" name="operation" value="post">
+    <input type="submit" name="submit" class="submit action-button" value="Public!" />
+  </fieldset>
+</form>
+
+
