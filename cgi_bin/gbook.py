@@ -1,3 +1,6 @@
+import json
+
+
 class Gbook:
     LOGIN = 'admin'
     PASSWORD = '123'
@@ -13,6 +16,20 @@ class Gbook:
         self.content = ''
         self.form = ''
         self.login_form = ''
+
+        # присваиваем шаблоны элементов сайта переменным
+        with open(self.CONTENT_TEMPLATE, 'r', encoding='utf-8') as f:
+            self.content = f.read()
+        with open(self.FORM_TEMPLATE, 'r', encoding='utf-8') as f:
+            self.form = f.read()
+        with open(self.LOGIN_FORM_TEMPLATE, 'r', encoding='utf-8') as f:
+            self.login_form = f.read()
+        try:
+            with open(self.DB, 'r', encoding='utf-8') as f:
+                pass
+        except FileNotFoundError:
+            with open(self.DB, 'w', encoding='utf-8') as f:
+                json.dump({}, f)
 
     def read_message(self):
         pass

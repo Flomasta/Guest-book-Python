@@ -1,6 +1,6 @@
 <div class= "message">
 <p>
-    <a href="mailto:{email}">{name}</a>
+    <a href="{email}">{name}</a>
 </p>
 <blockquote>
     <em><small>{datetime}</small></em>
