@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from http import cookies
 import time
 
 
@@ -26,10 +27,11 @@ class Gbook:
             self.content = f.read()
         with open(self.FORM_TEMPLATE, 'r', encoding='utf-8') as f:
             self.form = f.read()
-        with open(self.NO_RECORDS_TEMPLATE, 'r', encoding='utf-8') as f:
-            self.no_records = f.read()
         with open(self.LOGIN_FORM_TEMPLATE, 'r', encoding='utf-8') as f:
             self.login_form = f.read()
+        with open(self.NO_RECORDS_TEMPLATE, 'r', encoding='utf-8') as f:
+            self.no_records = f.read()
+
         try:
             with open(self.DB, 'r', encoding='utf-8') as f:
                 pass
@@ -37,7 +39,7 @@ class Gbook:
             with open(self.DB, 'w', encoding='utf-8') as f:
                 json.dump({}, f)
 
-    def read_message(self):
+    def read_message(self, admin):
         with open(self.DB, 'r', encoding='utf-8') as f:
             message = json.load(f)
         if not message:
@@ -47,7 +49,10 @@ class Gbook:
             message_template = f.read()
             for id in sorted(message.keys(), reverse=True):
                 date = datetime.fromtimestamp(int(id)).strftime('%d-%M-%Y %H:%m:%S')
-                self.message += message_template.format(datetime=date, msg=message[id]['msg'],email=message[id]['email'], name=message[id]['name'])
+                self.message += message_template.format(datetime=date, msg=message[id]['msg'],
+                                                        email=message[id]['email'], name=message[id]['name'])
+                if admin:
+                    self.message += "<p><a href='index.py?del={}' >Delete</a></p>".format(id)
 
     def save_message(self, name, email, message):
         dt = int(time.time())
@@ -57,14 +62,27 @@ class Gbook:
         with open(self.DB, 'w', encoding='utf-8') as f:
             json.dump(m, f)
 
+    def delete_message(self, id):
+        with open(self.DB, 'r', encoding='utf-8') as f:
+            message = json.load(f)
+        del message[id]
+        with open(self.DB, 'w', encoding='utf-8') as f:
+            json.dump(message, f)
 
-def delete_message(self, id):
-    pass
+    def login(self, login, password):
+        if login == self.LOGIN and password == self.PASSWORD:
+            cookie = cookies.SimpleCookie()
+            cookie['admin'] = "1"
+            cookie['admin']['httponly'] = "1"
+            print(cookie.output())
+            return True
+        return False
 
-
-def login(self, login, password):
-    pass
-
-
-def logout(self):
-    pass
+    def logout(self):
+        cookie = cookies.SimpleCookie()
+        cookie['admin'] = "1"
+        cookie['admin']['httponly'] = "1"
+        expired = time.gmtime(time.time() - 3600)
+        expired = time.strftime("%a,%d %b %Y %T GMT", expired)
+        cookie['admin']['expires'] = expired
+        print(cookie.output())

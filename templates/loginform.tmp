@@ -1,8 +1,8 @@
-<form action="/gbook/index.py" method="post" class =" msform_login" id = "logout">
+<form action="/gbook/cgi_bin/index.py" method="post" class =" msform_login" id = "logout">
 <input type="hidden" name="operation" value="logout">
 <input type="submit" value="Logout"  id = "btn_logout" class="submit action-button">
 </form>
-<form action="/gbook/index.py" method="post" id = "login_form" class ="msform_login">
+<form action="/gbook/cgi_bin/index.py" method="post" id = "login_form" class ="msform_login">
 
     <input type="text" name="login" value = "Login">
     <input type="text" name="password" value = "Password">

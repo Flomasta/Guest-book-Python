@@ -1,5 +1,6 @@
 #!C:\Users\floma\AppData\Local\Programs\Python\Python310\python.exe
 import html
+import os
 from http import cookies
 import cgitb, json
 from gbook import Gbook
@@ -9,18 +10,19 @@ from cgi import FieldStorage
 # отладчик
 cgitb.enable()
 
-# Устанавливаем куки
-cookie = cookies.SimpleCookie()
-cookie['name'] = 'Mike'
-cookie['name']['httponly'] = 1
+
 # передаём заголовки
-print(cookie.output())
-print('Content-Type: text/html; charset =  utf-8\n')
+
+
 
 gbook = Gbook()
-
+admin = False
 parameters = FieldStorage()
 
+if 'HTTP_COOKIE' in os.environ:
+    cookie = cookies.SimpleCookie(os.environ.get('HTTP_COOKIE')).get('admin')
+    if cookie is not None:
+        admin = True
 if environ.get('REQUEST_METHOD') == 'POST':
     operation = parameters.getvalue('operation')
     if operation == 'message':
@@ -31,10 +33,23 @@ if environ.get('REQUEST_METHOD') == 'POST':
     elif operation == 'login':
         login = html.escape(parameters.getvalue('login'))
         password = html.escape(parameters.getvalue('password'))
+        admin = gbook.login(login, password)
+
     elif operation == 'logout':
-        pass
-gbook.read_message()
+        gbook.logout()
+        admin = False
+
+if 'del' in parameters:
+    id = parameters.getvalue('del')
+    if id:
+        gbook.delete_message(id)
+
+gbook.read_message(admin)
+print('Content-Type: text/html; charset =  utf-8\n')
+
 print(gbook.content.format(login_form=gbook.login_form, form=gbook.form, messages=gbook.message))
+print(parameters)
+
 # MY_FILE = r"..\..\gbook\templates\messages.json"
 # get для словаря  в  случае  отсутствия элемента  вернёт None, а не exception с ошибой KeyError
 # getting_cookie = environ.get('HTTP_COOKIE')
