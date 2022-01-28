@@ -1,4 +1,4 @@
-<form action="/gbook/index.py" method="post" class="msform">
+<form action="/gbook/cgi_bin/index.py" method="post" class="msform">
 
    <!-- fieldsets -->
    <fieldset>
@@ -6,7 +6,7 @@
     <input type="text" name="name" placeholder="Place Your Name" />
     <input type="text" name="email" placeholder="E-mail" />
     <textarea name="msg" placeholder="Your message here" rows ="10"></textarea>
-    <input type="hidden" name="operation" value="post">
+    <input type="hidden" name="operation" value="message">
     <input type="submit" name="submit" class="submit action-button" value="Public!" />
   </fieldset>
 </form>
