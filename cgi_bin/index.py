@@ -2,19 +2,22 @@
 import html
 import os
 from http import cookies
-import cgitb, json
-from gbook import Gbook
-from os import environ
-from cgi import FieldStorage
+import sys
+sys.path.append('../src')
+from dateutil.parser import parse as parse_time
+
+import cgitb
 
 # отладчик
 cgitb.enable()
 
+from controller.gbook import Gbook
+import templates
+from os import environ
+from cgi import FieldStorage
+
 
 # передаём заголовки
-
-
-
 gbook = Gbook()
 admin = False
 parameters = FieldStorage()
@@ -39,15 +42,17 @@ if environ.get('REQUEST_METHOD') == 'POST':
         gbook.logout()
         admin = False
 
+
 if 'del' in parameters:
     id = parameters.getvalue('del')
     if id:
         gbook.delete_message(id)
 
-gbook.read_message(admin)
+
 print('Content-Type: text/html; charset =  utf-8\n')
 
-print(gbook.content.format(login_form=gbook.login_form, form=gbook.form, messages=gbook.message))
+#
+print(templates.content.format(login_form=templates.login_form, form=templates.form, messages=gbook.read_messages(admin)))
 print(parameters)
 
 # MY_FILE = r"..\..\gbook\templates\messages.json"
